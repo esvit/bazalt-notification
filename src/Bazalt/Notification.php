@@ -24,7 +24,7 @@ class Notification
 
     public static function dispatch($eventName, $target = null, $args = [])
     {
-        return self::dispatcher()->dispatch($eventName, new \Symfony\Component\EventDispatcher\Event($target, $args));
+        return self::dispatcher()->dispatch($eventName, new \Symfony\Component\EventDispatcher\GenericEvent($target, $args));
     }
 
     public static function addListener($eventName, $callback)

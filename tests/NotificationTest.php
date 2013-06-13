@@ -4,6 +4,23 @@ namespace tests;
 
 use Bazalt\Notification;
 
+class TestComponent implements \Bazalt\Notification\INotifiable
+{
+    const EVENT_REGISTRATION_COMPLETE = 'user.registration.complete';
+
+    public static function getNotifications()
+    {
+        return [
+            self::EVENT_REGISTRATION_COMPLETE => ''
+        ];
+    }
+
+    public static function getSubscribedEvents()
+    {
+        return [];
+    }
+}
+
 class NotificationTest extends \tests\BaseCase
 {
     protected $view;
@@ -39,6 +56,17 @@ class NotificationTest extends \tests\BaseCase
         ], $this->view->folders());*/
     }
 
+    public function testINotifiable()
+    {
+        Notification::addListener(TestComponent::EVENT_REGISTRATION_COMPLETE, function ($event) {
+            $this->assertEquals($event->getName(), TestComponent::EVENT_REGISTRATION_COMPLETE);
+            $this->assertEquals(['test'], $event->getArguments());
+            $this->assertSame($this, $event->getSubject());
+        });
+
+        Notification::dispatch(TestComponent::EVENT_REGISTRATION_COMPLETE, $this, ['test']);
+
+    }
     /**
      * @expectedException Exception
      
